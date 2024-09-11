@@ -24,7 +24,7 @@ public class CorsConfig {
 
 
                         registry.addMapping("/api/**")
-                                .allowedOrigins("http://loaninneedtest-production.up.railway.app") // Allow requests from your React app
+                                .allowedOrigins("https://gregarious-alpaca-26153e.netlify.app/") // Allow requests from your React app
                                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                                 .allowedHeaders("*");
 
