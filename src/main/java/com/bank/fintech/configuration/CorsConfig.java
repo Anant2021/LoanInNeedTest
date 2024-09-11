@@ -22,7 +22,12 @@ public class CorsConfig {
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*");
 
-                
+
+                        registry.addMapping("/api/**")
+                                .allowedOrigins("http://loaninneedtest-production.up.railway.app") // Allow requests from your React app
+                                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                                .allowedHeaders("*");
+
 
             }
         };
