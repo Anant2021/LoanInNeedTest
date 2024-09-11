@@ -19,9 +19,9 @@ public class ClientDetailController {
     public ClientDetailController(ClientLoanDetailService service) {
         this.service = service;
     }
+        @GetMapping("/hc") public String HealthCheck(){return "hi inside client Detail Controller";}
 
-
-    @GetMapping
+    @GetMapping("/")
     public List<ClientLoanDetail> findByLoanNo(@PathVariable String loanNo) {
         return service.findByLoanNo(loanNo);
     }
