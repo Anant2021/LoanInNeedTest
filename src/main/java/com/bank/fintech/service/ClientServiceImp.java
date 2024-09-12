@@ -16,6 +16,23 @@ public class ClientServiceImp implements ClientService{
     private ClientRepository clientRepo;
     @Override
     public Client saveClient(Client client) {
+
+        Client existingClient = clientRepo.findByPanNo(client.getpanNo());
+
+        if (existingClient != null) {
+            // If the existing client's status is "pending"
+            if ("pending".equalsIgnoreCase(existingClient.getStatus())) {
+                throw new RuntimeException("Already exists with status pending");
+            }
+            // If the existing client's status is "rejected"
+            else if ("rejected".equalsIgnoreCase(existingClient.getStatus())) {
+                // Check if 6 months have passed since the request date
+                LocalDate sixMonthsLater = existingClient.getRequestDate().plusMonths(6);
+                if (LocalDate.now().isBefore(sixMonthsLater)) {
+                    throw new RuntimeException("Client with PAN number " + client.getpanNo() + " was rejected less than 6 months ago. You can apply after " + sixMonthsLater);
+                }
+            }
+        }
         return clientRepo.save(client);
     }
 

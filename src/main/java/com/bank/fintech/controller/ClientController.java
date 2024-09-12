@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,14 +34,24 @@ public class ClientController {
 //
 //    }
 
-    @PostMapping("/save")
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
-//        String address1= client.getAddress1();
-//        String address2= client.getAddress2();
-//        client.setAddress(address1+","+address2);
-
-        return new ResponseEntity<Client>(clientService.saveClient(client), HttpStatus.CREATED);
-
+//    @PostMapping("/save")
+//    public ResponseEntity<Client> createClient(@RequestBody Client client) {
+//        return new ResponseEntity<Client>(clientService.saveClient(client), HttpStatus.CREATED);
+//    }
+@PostMapping("/save")
+public ResponseEntity<Map<String, Object>> createClient(@RequestBody Client client) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Client savedClient = clientService.saveClient(client);
+            response.put("code", 1);
+            response.put("message", "Client created successfully");
+            response.put("client", savedClient);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            response.put("code", -1);
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/all")
