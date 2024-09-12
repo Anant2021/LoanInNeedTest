@@ -10,7 +10,7 @@ public interface ClientService {
     public Client saveClient(Client client);
     public List<Client> getAllClients();
     public Client getClient(int id);
-    public Client getClientByPan(String pan);
+    public Client getClientByPan(String PanNo);
     public void deleteClient(int id);
 //    public  Client updateClient(int id , Client client);
     public Client updateClientStatus(int id, String status);

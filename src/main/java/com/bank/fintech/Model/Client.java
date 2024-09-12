@@ -63,7 +63,7 @@ public class Client {
         @Temporal(TemporalType.DATE)
         private LocalDate requestDate;
 
-        private LocalDate acceptedDate;
+        private LocalDate responseDate;
 
         public int getId() {
            return id; }
@@ -93,12 +93,12 @@ public class Client {
         this.requestDate = requestDate;
     }
 
-    public LocalDate getAcceptedDate() {
-        return acceptedDate;
+    public LocalDate getResponseDate() {
+        return responseDate;
     }
 
-    public void setAcceptedDate(LocalDate acceptedDate) {
-        this.acceptedDate = acceptedDate;
+    public void setResponseDate(LocalDate responseDate) {
+        this.responseDate = responseDate;
     }
 
     public String getStatus() {
@@ -189,7 +189,7 @@ public class Client {
         this.pinCode = pinCode;
     }
 
-    public String getPanNo() {
+    public String getpanNo() {
         return panNo;
     }
 
