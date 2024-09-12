@@ -29,7 +29,7 @@ public class ClientServiceImp implements ClientService{
                 // Check if 6 months have passed since the request date
                 LocalDate sixMonthsLater = existingClient.getRequestDate().plusMonths(6);
                 if (LocalDate.now().isBefore(sixMonthsLater)) {
-                    throw new RuntimeException("Client with PAN number " + client.getpanNo() + " was rejected less than 6 months ago. You can apply after " + sixMonthsLater);
+                    throw new RuntimeException("Client with PAN number " + client.getpanNo() + " was rejected less than 6 months ago. You can apply after" + sixMonthsLater);
                 }
             }
         }
