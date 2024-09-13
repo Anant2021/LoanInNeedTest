@@ -76,6 +76,16 @@ public class ClientServiceImp implements ClientService{
     }
 
 
+@Override
+public  List<Client> getAllClientsByRequestDate(LocalDate fromDate, LocalDate toDate){
+    if (fromDate.isAfter(toDate)) {
+        throw new IllegalArgumentException("fromDate must be before toDate");
+    }
+
+    return clientRepo.getAllClientsByRequestDate(fromDate,toDate);
+}
+
+
     public void deleteClient(int id) {
       Client client= clientRepo.findById(id).get();
         if(client !=null)

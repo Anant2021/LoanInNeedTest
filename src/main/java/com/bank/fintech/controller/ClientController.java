@@ -114,9 +114,19 @@ public ResponseEntity<String> deleteClient(@PathVariable int id) {
         LocalDate startDate = LocalDate.parse(fromDate);
         LocalDate endDate = LocalDate.parse(toDate);
 
-        // Fetch clients from the service
-        List<Client> clients = clientService.getClientsByStatusAndRequestDate(status, startDate, endDate);
 
+
+
+        // Fetch clients from the service
+        List<Client> clients ;
+
+        if("all".equalsIgnoreCase(status))
+        {
+            clients = clientService.getAllClientsByRequestDate(startDate, endDate);
+        }
+        else {
+            clients = clientService.getClientsByStatusAndRequestDate(status, startDate, endDate);
+        }
         // Return the response
         return ResponseEntity.ok(clients);
     }

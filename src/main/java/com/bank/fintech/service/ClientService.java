@@ -17,5 +17,7 @@ public interface ClientService {
 //    public String updateClientByStatus(int id , String status);
     public Map<String, Object> updateClientByStatus(int id , String status);
     public List<Client> getClientsByStatusAndRequestDate(String status, LocalDate fromDate, LocalDate toDate);
+
+    public  List<Client> getAllClientsByRequestDate(LocalDate fromDate, LocalDate toDate);
 }
 

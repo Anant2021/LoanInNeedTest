@@ -14,5 +14,9 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
 
     Client findByPanNoAndStatus(String panNo, String status);
 
-    @Query("SELECT c FROM Client c WHERE c.status = ?1 AND c.requestDate BETWEEN ?2 AND ?3")List<Client> findByStatusAndRequestDate(String status, LocalDate fromDate, LocalDate toDate);
+    @Query("SELECT c FROM Client c WHERE c.status = ?1 AND c.requestDate BETWEEN ?2 AND ?3")
+    List<Client> findByStatusAndRequestDate(String status, LocalDate fromDate, LocalDate toDate);
+    @Query("SELECT c FROM Client c WHERE c.requestDate BETWEEN ?1 AND ?2")
+    List<Client> getAllClientsByRequestDate(LocalDate fromDate, LocalDate toDate);
+
 }
