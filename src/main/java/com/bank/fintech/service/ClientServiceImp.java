@@ -15,25 +15,87 @@ public class ClientServiceImp implements ClientService{
     @Autowired
     private ClientRepository clientRepo;
     @Override
-    public Client saveClient(Client client) {
+    public Client saveClient(Client client ) {
 
-        Client existingClient = clientRepo.findByPanNo(client.getpanNo());
+        Client existingPanClient = clientRepo.findByPanNo(client.getpanNo());
 
-        if (existingClient != null) {
-            // If the existing client's status is "pending"
-            if ("pending".equalsIgnoreCase(existingClient.getStatus())) {
-                throw new RuntimeException("Already exists with status pending");
-            }
-            // If the existing client's status is "rejected"
-            else if ("rejected".equalsIgnoreCase(existingClient.getStatus())) {
-                // Check if 6 months have passed since the request date
-                LocalDate sixMonthsLater = existingClient.getRequestDate().plusMonths(6);
-                if (LocalDate.now().isBefore(sixMonthsLater)) {
-                    throw new RuntimeException("Client with PAN number " + client.getpanNo() + " was rejected less than 6 months ago. You can apply after" + sixMonthsLater);
+        // If an existing client is found, check their status
+//        if (existingPanClient != null) {
+//            String status = existingPanClient.getStatus();
+//            if ("pending".equalsIgnoreCase(status)) {
+//                throw new RuntimeException("Application not saved, as status is pending.");
+//            } else if ("InProcess".equalsIgnoreCase(status)) {
+//                throw new RuntimeException("Application already in process.");
+//            } else if ("Completed".equalsIgnoreCase(status)) {
+//                throw new RuntimeException("Case with these credentials is already closed.");
+//            } else if ("rejected".equalsIgnoreCase(status)) {
+//                LocalDate sixMonthsLater = existingPanClient.getRequestDate().plusMonths(2);
+//                if (LocalDate.now().isBefore(sixMonthsLater)) {
+//                    throw new RuntimeException("Client with PAN number " + client.getpanNo() +
+//                            " was rejected less than 2 months ago. You can apply after " + sixMonthsLater);
+//                }
+//            }
+//        }
+
+//
+//
+//        // If no issues, save the new client entry
+//        return clientRepo.save(client);
+        Client existingAadharClient = clientRepo.findByAadharNo(client.getAadharNo());
+        if (existingPanClient != null || existingAadharClient != null) {
+            StringBuilder errorMessage = new StringBuilder();
+
+            if (existingPanClient != null) {
+                String panStatus = existingPanClient.getStatus();
+                if ("pending".equalsIgnoreCase(panStatus)) {
+                    errorMessage.append("Application not saved for PAN, as status is pending. ");
+                } else if ("InProcess".equalsIgnoreCase(panStatus)) {
+                    errorMessage.append("Application already in process for PAN. ");
+                } else if ("Completed".equalsIgnoreCase(panStatus)) {
+                    errorMessage.append("Case with these credentials is already closed for PAN. ");
+                } else if ("rejected".equalsIgnoreCase(panStatus)) {
+                    LocalDate sixMonthsLater = existingPanClient.getRequestDate().plusMonths(2);
+                    if (LocalDate.now().isBefore(sixMonthsLater)) {
+                        errorMessage.append("Client with PAN number " + client.getpanNo()+
+                                " was rejected less than 2 months ago. You can apply after " + sixMonthsLater + ". ");
+                    }
                 }
             }
+
+            if (existingAadharClient != null) {
+                String aadharStatus = existingAadharClient.getStatus();
+                if ("pending".equalsIgnoreCase(aadharStatus)) {
+                    errorMessage.append("Application not saved for Aadhaar, as status is pending. ");
+                } else if ("InProcess".equalsIgnoreCase(aadharStatus)) {
+                    errorMessage.append("Application already in process for Aadhaar. ");
+                } else if ("Completed".equalsIgnoreCase(aadharStatus)) {
+                    errorMessage.append("Case with these credentials is already closed for Aadhaar. ");
+                } else if ("rejected".equalsIgnoreCase(aadharStatus)) {
+                    LocalDate sixMonthsLater = existingAadharClient.getRequestDate().plusMonths(2);
+                    if (LocalDate.now().isBefore(sixMonthsLater)) {
+                        errorMessage.append("Client with Aadhaar number " + client.getAadharNo() +
+                                " was rejected less than 2 months ago. You can apply after " + sixMonthsLater + ". ");
+                    }
+                }
+            }
+
+            // Throw an exception with all collected error messages
+            throw new RuntimeException(errorMessage.toString().trim());
         }
+
+        // If no issues, save the new client entry
         return clientRepo.save(client);
+    }
+
+
+
+   @Override public String checkClientStatus(String panNo) {
+
+        Client existingClients = clientRepo.findByPanNo(panNo);
+        if (existingClients != null) {
+            return existingClients.getStatus();
+        }
+        return null; // No existing client found
     }
 
     @Override public List<Client> getAllClients() {

@@ -8,9 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,18 +42,61 @@ public class ClientController {
 @PostMapping("/save")
 public ResponseEntity<Map<String, Object>> createClient(@RequestBody Client client) {
         Map<String, Object> response = new HashMap<>();
+
         try {
             Client savedClient = clientService.saveClient(client);
             response.put("code", 1);
-            response.put("message", "Client created successfully");
+            response.put("message", "Request Saved successfully");
             response.put("client", savedClient);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (RuntimeException e) {
+
             response.put("code", -1);
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
+//@PostMapping("/save")
+//public ResponseEntity<Map<String, Object>> createClient(
+//        @RequestParam("client") Client client,
+//        @RequestParam("pdfDocuments") MultipartFile[] pdfDocuments) {
+//
+//    Map<String, Object> response = new HashMap<>();
+//    try {
+//        // Save each PDF document and set its path in the client object
+//        for (int i = 0; i < pdfDocuments.length; i++) {
+//            if (i < 4) { // Only handle up to 4 documents
+//                File targetFile = new File("uploads/" + pdfDocuments[i].getOriginalFilename());
+//                pdfDocuments[i].transferTo(targetFile); // Save file to server
+//
+//                switch (i) {
+//                    case 0:
+//                        client.setAadharCardDocument1(targetFile.getPath());
+//                        break;
+//                    case 1:
+//                        client.setPanCardDocument2(targetFile.getPath());
+//                        break;
+//                    case 2:
+//                        client.setSalarySlipDocument3(targetFile.getPath());
+//                        break;
+//                    case 3:
+//                        client.setBankStatmentDocument4(targetFile.getPath());
+//                        break;
+//                }
+//            }
+//        }
+//
+//        Client savedClient = clientService.saveClient(client);
+//        response.put("code", 1);
+//        response.put("message", "Client created successfully");
+//        response.put("client", savedClient);
+//        return new ResponseEntity<>(response, HttpStatus.CREATED);
+//    } catch (RuntimeException | IOException e) {
+//        response.put("code", -1);
+//        response.put("message", e.getMessage());
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
+//}
 
     @GetMapping("/all")
         public ResponseEntity<List<Client>> getAllClients() {
@@ -114,9 +158,6 @@ public ResponseEntity<String> deleteClient(@PathVariable int id) {
         LocalDate startDate = LocalDate.parse(fromDate);
         LocalDate endDate = LocalDate.parse(toDate);
 
-
-
-
         // Fetch clients from the service
         List<Client> clients ;
 
@@ -129,6 +170,6 @@ public ResponseEntity<String> deleteClient(@PathVariable int id) {
         }
         // Return the response
         return ResponseEntity.ok(clients);
-    }
+    } 
 
 }

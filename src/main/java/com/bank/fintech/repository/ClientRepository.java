@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ClientRepository extends JpaRepository<Client,Integer> {
     Client findByPanNo(String panNo);
-
+    Client findByAadharNo(String aadharNo);
     Client findByPanNoAndStatus(String panNo, String status);
 
     @Query("SELECT c FROM Client c WHERE c.status = ?1 AND c.requestDate BETWEEN ?2 AND ?3")
